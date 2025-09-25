@@ -17,7 +17,7 @@ import './js/features/complaints.js'
 import './js/features/tracking.js'
 import './js/features/training.js'
 import './js/features/ecommerce.js'
-import './js/main.js'
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />
