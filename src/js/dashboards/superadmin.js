@@ -85,8 +85,29 @@ class SuperadminDashboard {
     this.bindEvents();
   }
 
+
+  loadStats() {
+  // 1) prefer saved state
+  const saved = Utils.storage.get('stats');
+  if (saved) return saved;
+
+  // 2) allow optional global seed if you later define window.MOCK_DATA
+  if (typeof window !== 'undefined' && window.MOCK_DATA?.stats) {
+    return window.MOCK_DATA.stats;
+  }
+
+  // 3) final fallback defaults
+  return {
+    totalComplaints: 1240,
+    resolvedComplaints: 1085,
+    activeWorkers: 312
+  };
+}
+
+
+
   renderDashboard() {
-    const stats = MOCK_DATA.stats;
+    const stats = this.stats;   
     const vouchers = this.vouchers;
     const revenue = this.calculateRevenue();
     const wasteSegregation = this.getWasteSegregationData();

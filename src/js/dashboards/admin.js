@@ -2,8 +2,26 @@
 class AdminDashboard {
   constructor() {
     this.currentSection = 'dashboard';
+    this.stats = this.loadStats();           // ← new
+  this.complaints = this.loadComplaints();
   }
 
+loadStats() {
+  const saved = Utils?.storage?.get?.('stats');
+  if (saved) return saved;
+
+  if (typeof window !== 'undefined' && window.MOCK_DATA?.stats) {
+    return window.MOCK_DATA.stats;
+  }
+
+  return {
+    totalComplaints: 1245,
+    resolvedComplaints: 1180,
+    activeWorkers: 312,
+    greenChampions: 87
+  };
+}
+  
   loadSection(section) {
     this.currentSection = section;
     const content = document.getElementById('mainContent');
@@ -75,6 +93,24 @@ class AdminDashboard {
 
     this.bindEvents();
   }
+
+loadComplaints() {
+  // 1) from local storage if present
+  const saved = Utils?.storage?.get?.('complaints');
+  if (saved?.length) return saved;
+
+  // 2) optional global seed
+  if (typeof window !== 'undefined' && Array.isArray(window.MOCK_DATA?.complaints)) {
+    return window.MOCK_DATA.complaints;
+  }
+
+  // 3) small default list (or generate a few)
+  const base = [];
+  if (Utils?.generateMockComplaint) {
+    for (let i = 0; i < 10; i++) base.push(Utils.generateMockComplaint());
+  }
+  return base;
+}
 
   renderDashboard() {
     const stats = MOCK_DATA.stats;
